@@ -32,4 +32,6 @@ public class RabbitMQConfig {
       rabbitTemplate.setMessageConverter(messageConverter());
         return rabbitTemplate;
     }
+
+
 }

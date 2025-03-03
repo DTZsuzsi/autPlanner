@@ -81,7 +81,9 @@ public boolean deleteUser(long id) {
             NewUserDTO newUserDTO= new NewUserDTO(userCheckRequest.getFirstName(), userCheckRequest.getLastName(), userCheckRequest.getEmail(), userCheckRequest.getPassword());
 
             createUser(newUserDTO);
-        }
+            String response = userExists ? "User exists" : "User created";
+            rabbitTemplate.convertAndSend("userQueue", response);        }
+
     }
 
     private boolean checkUserExists(String email) {
