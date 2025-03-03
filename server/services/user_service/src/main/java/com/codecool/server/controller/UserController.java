@@ -1,5 +1,6 @@
 package com.codecool.server.controller;
 
+import com.codecool.server.DTO.user.NewUserDTO;
 import com.codecool.server.DTO.user.UserDTO;
 import com.codecool.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ public class UserController{
         return userService.getUserById(userId);
 }
 @PostMapping
-    public long addUser(@RequestBody UserDTO userDTO) {
-        return userService.createUser(userDTO);
+    public long addUser(@RequestBody NewUserDTO newUserDTO) {
+        return userService.createUser(newUserDTO);
 }
 
 @PatchMapping

@@ -1,5 +1,6 @@
 package com.codecool.server.service;
 
+import com.codecool.server.model.UserCheckRequest;
 import com.codecool.server.model.UserMessage;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -25,5 +26,9 @@ public class AuthService {
     public void receiveMessage(UserMessage userMessage) {
         System.out.println("Received message: " + userMessage);
 
+    }
+
+    public void checkUser(UserCheckRequest userCheckRequest) {
+        rabbitTemplate.convertAndSend("userQueue", userCheckRequest);
     }
 }

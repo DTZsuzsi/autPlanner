@@ -1,7 +1,9 @@
 package com.codecool.server.service;
 
+import com.codecool.server.DTO.user.NewUserDTO;
 import com.codecool.server.DTO.user.UserDTO;
 import com.codecool.server.mapper.UserMapper;
+import com.codecool.server.model.UserCheckRequest;
 import com.codecool.server.model.UserEntity;
 import com.codecool.server.model.UserMessage;
 import com.codecool.server.repository.UserRepository;
@@ -33,8 +35,8 @@ public UserDTO getUserById(long id) {
     return userRepository.findById(id).map(userMapper::userEntityToUserDTO).orElse(null);
 }
 
-public long createUser(UserDTO userDTO) {
-    UserEntity userEntity = userMapper.userDTOToUserEntity(userDTO);
+public long createUser(NewUserDTO newUserDTO) {
+    UserEntity userEntity = userMapper.newUserDTOToEntity(newUserDTO);
     return userRepository.save(userEntity).getId();
 }
 
@@ -70,4 +72,22 @@ public boolean deleteUser(long id) {
         System.out.println("Received message: " + userMessage);
 
     }
+
+    @RabbitListener(queues = "authQueue")
+    public void receiveUserCheckRequest(UserCheckRequest userCheckRequest) {
+        System.out.println("Received user check request: " + userCheckRequest);
+        boolean userExists = checkUserExists(userCheckRequest.getEmail());
+        if (!userExists) {
+            NewUserDTO newUserDTO= new NewUserDTO(userCheckRequest.getFirstName(), userCheckRequest.getLastName(), userCheckRequest.getEmail(), userCheckRequest.getPassword());
+
+            createUser(newUserDTO);
+        }
+    }
+
+    private boolean checkUserExists(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+
+
 }
