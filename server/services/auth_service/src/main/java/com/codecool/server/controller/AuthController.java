@@ -3,15 +3,13 @@ package com.codecool.server.controller;
 
 import com.codecool.server.model.RegisterRequest;
 import com.codecool.server.model.UserCheckRequest;
+import com.codecool.server.model.UserMessage;
 import com.codecool.server.security.JWTUtil;
 import com.codecool.server.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -25,8 +23,8 @@ public class AuthController {
     private AuthService authService;
 
     @Autowired
-    public AuthController(JWTUtil jwtUtil, AuthService authService) {
-        this.jwtUtil = jwtUtil;
+    public AuthController( JWTUtil jwtUtil,AuthService authService) {
+       this.jwtUtil = jwtUtil;
         this.authService = authService;
     }
 
@@ -37,10 +35,13 @@ public class AuthController {
         return jwtUtil.generateToken(loginRequest.getUsername());
     }
 
+
+
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) throws ExecutionException, InterruptedException, TimeoutException {
         UserCheckRequest userCheckRequest = new UserCheckRequest(registerRequest.getFirstName(), registerRequest.getLastName(), registerRequest.getEmail(), registerRequest.getPassword());
         authService.checkUser(userCheckRequest);
+
         String response = authService.getUserResponseFuture().get(10, TimeUnit.SECONDS);
         authService.resetUserResponseFuture();
 
@@ -48,7 +49,6 @@ public class AuthController {
             return new ResponseEntity<>("Registration was successful", HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("Email is taken!", HttpStatus.BAD_REQUEST);
-
         }
     }
 
@@ -56,5 +56,11 @@ public class AuthController {
     public String authorize(@RequestBody UserCheckRequest userCheckRequest) {
         authService.checkUser(userCheckRequest);
         return "User check request sent to user-service";
+    }
+
+    @PostMapping("/sendMessage")
+    public String sendMessage(@RequestBody UserMessage userMessage) {
+         authService.sendMessage(userMessage);
+         return "Message sent to user-service";
     }
 }

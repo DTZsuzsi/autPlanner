@@ -25,13 +25,16 @@ public class RabbitMQConfig {
         return new Jackson2JsonMessageConverter();
     }
 
-    @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
 
-      RabbitTemplate rabbitTemplate=  new RabbitTemplate(connectionFactory);
-      rabbitTemplate.setMessageConverter(messageConverter());
-        return rabbitTemplate;
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, Jackson2JsonMessageConverter messageConverter) {
+        RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        template.setMessageConverter(messageConverter);  // 🔥 Ensure JSON conversion
+        return template;
     }
 
-
 }
+
+
+

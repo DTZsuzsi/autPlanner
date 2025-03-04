@@ -73,23 +73,27 @@ public boolean deleteUser(long id) {
 
     }
 
-    @RabbitListener(queues = "authQueue")
-    public void receiveUserCheckRequest(UserCheckRequest userCheckRequest) {
-        System.out.println("Received user check request: " + userCheckRequest);
-        boolean userExists = checkUserExists(userCheckRequest.getEmail());
-        if (!userExists) {
-            NewUserDTO newUserDTO= new NewUserDTO(userCheckRequest.getFirstName(), userCheckRequest.getLastName(), userCheckRequest.getEmail(), userCheckRequest.getPassword());
-
-            createUser(newUserDTO);
-            String response = userExists ? "User exists" : "User created";
-            rabbitTemplate.convertAndSend("userQueue", response);        }
-
-    }
+//    @RabbitListener(queues = "authQueue")
+//    public void receiveUserCheckRequest(UserCheckRequest userCheckRequest) {
+//        System.out.println("Received user check request: " + userCheckRequest);
+//        boolean userExists = checkUserExists(userCheckRequest.getEmail());
+//        if (!userExists) {
+//            NewUserDTO newUserDTO= new NewUserDTO(userCheckRequest.getFirstName(), userCheckRequest.getLastName(), userCheckRequest.getEmail(), userCheckRequest.getPassword());
+//
+//            createUser(newUserDTO);
+//            String response = userExists ? "User exists" : "User created";
+//            rabbitTemplate.convertAndSend("userQueue", response);        }
+//
+//    }
 
     private boolean checkUserExists(String email) {
         return userRepository.existsByEmail(email);
     }
 
+    @RabbitListener(queues = "userQueue")
+    public void receiveUserMessage(UserMessage userMessage) {
+        System.out.println("Received message in userQueue: " + userMessage);
+    }
 
 
 }
