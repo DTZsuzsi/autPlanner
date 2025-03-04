@@ -5,7 +5,6 @@ import com.codecool.server.DTO.user.UserDTO;
 import com.codecool.server.mapper.UserMapper;
 import com.codecool.server.model.UserCheckRequest;
 import com.codecool.server.model.UserEntity;
-import com.codecool.server.model.UserMessage;
 import com.codecool.server.repository.UserRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

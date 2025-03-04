@@ -1,16 +1,24 @@
 package com.codecool.server.controller;
 
 
+import com.codecool.server.DTO.AuthResponseDTO;
+import com.codecool.server.DTO.CredentialsDTO;
 import com.codecool.server.model.RegisterRequest;
 import com.codecool.server.model.UserCheckRequest;
-import com.codecool.server.model.UserMessage;
 import com.codecool.server.security.JWTUtil;
 import com.codecool.server.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -21,18 +29,28 @@ public class AuthController {
 
     private JWTUtil jwtUtil;
     private AuthService authService;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthController(JWTUtil jwtUtil, AuthService authService) {
+    public AuthController(JWTUtil jwtUtil, AuthService authService, AuthenticationManager authenticationManager) {
         this.jwtUtil = jwtUtil;
         this.authService = authService;
+        this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest) {
-        // Implement login logic, validate credentials
-        // Return generated JWT token
-        return jwtUtil.generateToken(loginRequest.getUsername());
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody CredentialsDTO credentials) {
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                credentials.email(),
+                                credentials.password()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtUtil.generateJwtToken(authentication);
+
+
+        return new ResponseEntity<>(new AuthResponseDTO(token, "User login successfully"), HttpStatus.OK);
     }
 
 

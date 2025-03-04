@@ -1,7 +1,6 @@
 package com.codecool.server.service;
 
 import com.codecool.server.model.UserCheckRequest;
-import com.codecool.server.model.UserMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
