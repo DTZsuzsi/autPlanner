@@ -23,8 +23,8 @@ public class AuthController {
     private AuthService authService;
 
     @Autowired
-    public AuthController( JWTUtil jwtUtil,AuthService authService) {
-       this.jwtUtil = jwtUtil;
+    public AuthController(JWTUtil jwtUtil, AuthService authService) {
+        this.jwtUtil = jwtUtil;
         this.authService = authService;
     }
 
@@ -34,7 +34,6 @@ public class AuthController {
         // Return generated JWT token
         return jwtUtil.generateToken(loginRequest.getUsername());
     }
-
 
 
     @PostMapping("/register")
@@ -57,10 +56,11 @@ public class AuthController {
         authService.checkUser(userCheckRequest);
         return "User check request sent to user-service";
     }
-
-    @PostMapping("/sendMessage")
-    public String sendMessage(@RequestBody UserMessage userMessage) {
-         authService.sendMessage(userMessage);
-         return "Message sent to user-service";
-    }
 }
+
+//    @PostMapping("/sendMessage")
+//    public String sendMessage(@RequestBody UserMessage userMessage) {
+//         authService.sendMessage(userMessage);
+//         return "Message sent to user-service";
+//    }
+//}

@@ -22,16 +22,12 @@ public class AuthService {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    @RabbitListener(queues = "userQueue")
+    @RabbitListener(queues = "userStringQueue")
     public void receiveMessage(String message) {
         System.out.println("Received message from user-service: " + message);
         userResponseFuture.complete(message);
     }
 
-    @RabbitListener(queues = "authQueue")
-    public void receiveAuthMessage(UserMessage userMessage) {
-        System.out.println("Received message in userQueue: " + userMessage);
-    }
 
 
     public CompletableFuture<String> getUserResponseFuture() {
@@ -42,20 +38,14 @@ public class AuthService {
         userResponseFuture = new CompletableFuture<>();
     }
 
-    public void sendMessage(UserMessage userMessage) {
-        try {
-            String json = objectMapper.writeValueAsString(userMessage);
-            System.out.println("Sending JSON: " + json);  // 🔍 Debug: Print actual JSON
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+public void sendStringMessage(String message) {
 
-        rabbitTemplate.convertAndSend("authQueue", userMessage);
-        System.out.println("sent message: " + userMessage);
+        rabbitTemplate.convertAndSend("authStringQueue", message);
+        System.out.println("sent message: " + message);
     }
 
     public void checkUser(UserCheckRequest userCheckRequest) {
-        rabbitTemplate.convertAndSend("userQueue", userCheckRequest);
+        rabbitTemplate.convertAndSend("authRequestQueue", userCheckRequest);
     }
 
 }
