@@ -1,8 +1,8 @@
 import UniversalForm from "../common/UniversalForm.jsx";
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
-// eslint-disable-next-line react/prop-types
-const SignupForm = ({ onSuccess }) => {
+const SignupForm = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -10,6 +10,7 @@ const SignupForm = ({ onSuccess }) => {
         email: '',
         password: '',
     });
+    const navigate = useNavigate();
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -17,22 +18,40 @@ const SignupForm = ({ onSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        const response = await fetch('/api/auth/signup', {
-            method: 'POST',
-            body: JSON.stringify(formData),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        const data = await response.json();
-        if (!response.ok) {
-            setError(data.error.message);
-            return;
-        }
-        onSuccess(true);
 
-        setLoading(false);
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                body: JSON.stringify(formData),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const contentType = response.headers.get('content-type');
+            let data;
+            if (contentType && contentType.includes('application/json')) {
+                data = await response.json();
+            } else {
+                const text = await response.text();
+                data = { message: text };
+            }
+
+            if (!response.ok) {
+                setError(data.message || 'An error occurred');
+                return;
+            }
+
+            console.log("Registration successful");
+            navigate("/login");
+
+        } catch (error) {
+            setError('An error occurred: ' + error.message);
+        } finally {
+            setLoading(false);
+        }
     };
+
     return (
         <UniversalForm
             onSubmit={handleSubmit}
