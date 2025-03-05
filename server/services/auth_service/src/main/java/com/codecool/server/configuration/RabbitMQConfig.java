@@ -11,13 +11,23 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Bean
-    public Queue authQueue() {
-        return new Queue("authQueue", true);
+    public Queue authStringQueue() {
+        return new Queue("authStringQueue", true);
     }
 
     @Bean
     public Queue userQueue() {
-        return new Queue("userQueue", true);
+        return new Queue("userStringQueue", true);
+    }
+
+    @Bean
+    public Queue authRequestQueue() {
+        return new Queue("authRequestQueue", true);
+    }
+
+    @Bean
+    public Queue userRequestQueue() {
+        return new Queue("userRequestQueue", true);
     }
 
     @Bean
@@ -25,11 +35,16 @@ public class RabbitMQConfig {
         return new Jackson2JsonMessageConverter();
     }
 
-    @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
 
-      RabbitTemplate rabbitTemplate=  new RabbitTemplate(connectionFactory);
-      rabbitTemplate.setMessageConverter(messageConverter());
-        return rabbitTemplate;
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, Jackson2JsonMessageConverter messageConverter) {
+        RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        template.setMessageConverter(messageConverter);  // 🔥 Ensure JSON conversion
+        return template;
     }
+
 }
+
+
+

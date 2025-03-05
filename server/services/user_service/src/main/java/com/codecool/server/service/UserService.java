@@ -1,9 +1,10 @@
 package com.codecool.server.service;
 
+import com.codecool.server.DTO.user.NewUserDTO;
 import com.codecool.server.DTO.user.UserDTO;
 import com.codecool.server.mapper.UserMapper;
+import com.codecool.server.model.UserCheckRequest;
 import com.codecool.server.model.UserEntity;
-import com.codecool.server.model.UserMessage;
 import com.codecool.server.repository.UserRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -33,8 +34,8 @@ public UserDTO getUserById(long id) {
     return userRepository.findById(id).map(userMapper::userEntityToUserDTO).orElse(null);
 }
 
-public long createUser(UserDTO userDTO) {
-    UserEntity userEntity = userMapper.userDTOToUserEntity(userDTO);
+public long createUser(NewUserDTO newUserDTO) {
+    UserEntity userEntity = userMapper.newUserDTOToEntity(newUserDTO);
     return userRepository.save(userEntity).getId();
 }
 
@@ -61,13 +62,37 @@ public boolean deleteUser(long id) {
  return false;
 }
 
-    public void sendMessage(UserMessage userMessage) {
-        rabbitTemplate.convertAndSend("userQueue", userMessage);
+    public void sendMessage(String message) {
+        rabbitTemplate.convertAndSend("userStringQueue", message);
     }
 
-    @RabbitListener(queues = "authQueue")
-    public void receiveMessage(UserMessage userMessage) {
-        System.out.println("Received message: " + userMessage);
+   @RabbitListener(queues = "authStringQueue")
+ public void receiveMessage(String message) {
+       System.out.println("Received message: " + message);
+
+   }
+
+    @RabbitListener(queues = "authRequestQueue")
+    public void receiveUserCheckRequest(UserCheckRequest userCheckRequest) {
+        System.out.println("Received user check request: " + userCheckRequest);
+        boolean userExists = checkUserExists(userCheckRequest.getEmail());
+        if (!userExists) {
+            NewUserDTO newUserDTO= new NewUserDTO(userCheckRequest.getFirstName(), userCheckRequest.getLastName(), userCheckRequest.getEmail(), userCheckRequest.getPassword());
+
+            createUser(newUserDTO);
+            String response = userExists ? "User exists" : "User created";
+            rabbitTemplate.convertAndSend("userStringQueue", response);        }
 
     }
+
+    private boolean checkUserExists(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @RabbitListener(queues = "userQueue")
+    public void receiveUserMessage(UserMessage userMessage) {
+        System.out.println("Received message in userQueue: " + userMessage);
+    }
+
+
 }
