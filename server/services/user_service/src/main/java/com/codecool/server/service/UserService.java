@@ -85,14 +85,24 @@ public boolean deleteUser(long id) {
 
     }
 
+    @RabbitListener(queues = "authUserQueue")
+    public void receiveUserRequest(String email) {
+    System.out.println("Received user request: " + email);
+    boolean userExists = checkUserExists(email);
+    if (userExists) {
+        UserEntity user=userRepository.findByEmail(email);
+        rabbitTemplate.convertAndSend("userUserQueue", user);
+    }
+    }
+
     private boolean checkUserExists(String email) {
         return userRepository.existsByEmail(email);
     }
 
-    @RabbitListener(queues = "userQueue")
-    public void receiveUserMessage(UserMessage userMessage) {
-        System.out.println("Received message in userQueue: " + userMessage);
-    }
+//    @RabbitListener(queues = "userQueue")
+//    public void receiveUserMessage(UserMessage userMessage) {
+//        System.out.println("Received message in userQueue: " + userMessage);
+//    }
 
 
 }

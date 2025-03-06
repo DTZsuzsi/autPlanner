@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -26,17 +27,19 @@ public class AuthController {
 
     private JWTUtil jwtUtil;
     private AuthService authService;
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationConfiguration authenticationConfiguration;
+
 
     @Autowired
-    public AuthController(JWTUtil jwtUtil, AuthService authService, AuthenticationManager authenticationManager) {
+    public AuthController(JWTUtil jwtUtil, AuthService authService, AuthenticationConfiguration authenticationConfiguration) {
         this.jwtUtil = jwtUtil;
         this.authService = authService;
-        this.authenticationManager = authenticationManager;
-    }
+this.authenticationConfiguration = authenticationConfiguration;    }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody CredentialsDTO credentials) {
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody CredentialsDTO credentials) throws Exception {
+
+        AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
         Authentication authentication =
                 authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
