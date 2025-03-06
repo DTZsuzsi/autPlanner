@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @Service
 public class AuthService {
@@ -59,6 +62,11 @@ public void sendStringMessage(String message) {
 
     public void getUserByEmail(String email) {
         rabbitTemplate.convertAndSend("authUserQueue", email);
+    }
+
+    @RabbitListener(queues = "userUserQueue")
+    public void receiveUserResponse(UserEntity user) {
+        userEntityFuture.complete(user);
     }
 
 }

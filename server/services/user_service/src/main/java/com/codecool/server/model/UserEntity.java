@@ -1,19 +1,19 @@
 package com.codecool.server.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class UserEntity {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+@Column(nullable = false, unique = true)
 private String username;
 private String password;
 private String firstName;
 private String lastName;
+@Column(nullable = false, unique = true)
 private String email;
 
     public UserEntity(long id, String username, String password, String firstName, String lastName, String email) {

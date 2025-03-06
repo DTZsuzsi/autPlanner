@@ -89,14 +89,17 @@ public boolean deleteUser(long id) {
     public void receiveUserRequest(String email) {
     System.out.println("Received user request: " + email);
     boolean userExists = checkUserExists(email);
+        System.out.println(userExists);
     if (userExists) {
         UserEntity user=userRepository.findByEmail(email);
+        System.out.println(user.getEmail());
         rabbitTemplate.convertAndSend("userUserQueue", user);
+        System.out.println("Ive sent the user: " + user.getEmail());
     }
     }
 
     private boolean checkUserExists(String email) {
-        return userRepository.existsByEmail(email);
+        return userRepository.findByEmail(email)!=null;
     }
 
 //    @RabbitListener(queues = "userQueue")

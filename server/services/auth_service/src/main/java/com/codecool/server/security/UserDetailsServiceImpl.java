@@ -30,8 +30,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity user;
         try {
-            user = askUserByEmail(email);
-        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            user = authService.getUserEntityFuture().get();
+        } catch (ExecutionException | InterruptedException  e) {
             throw new UsernameNotFoundException("Failed to fetch user details for email: " + email, e);
         }
 
@@ -45,10 +45,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new User(user.getEmail(), user.getPassword(), grantedAuthorities);
     }
 
-    public UserEntity askUserByEmail(String email) throws ExecutionException, InterruptedException, TimeoutException {
-        authService.getUserByEmail(email);
-        UserEntity user = authService.getUserEntityFuture().get(10, TimeUnit.SECONDS);
-        authService.resetUserEntityFuture();
-        return user;
-    }
+
 }

@@ -1,3 +1,5 @@
+DELETE FROM user_entity;
+
 INSERT INTO user_entity (username, password, first_name, last_name, email) VALUES
                                                                                ('user1', 'password1', 'John', 'Doe', 'john.doe@example.com'),
                                                                                ('user2', 'password2', 'Jane', 'Doe', 'jane.doe@example.com'),

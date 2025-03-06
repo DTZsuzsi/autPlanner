@@ -5,6 +5,7 @@ import com.codecool.server.DTO.AuthResponseDTO;
 import com.codecool.server.DTO.CredentialsDTO;
 import com.codecool.server.model.RegisterRequest;
 import com.codecool.server.model.UserCheckRequest;
+import com.codecool.server.model.UserEntity;
 import com.codecool.server.security.JWTUtil;
 import com.codecool.server.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,21 +38,34 @@ public class AuthController {
 this.authenticationConfiguration = authenticationConfiguration;    }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody CredentialsDTO credentials) throws Exception {
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody CredentialsDTO credentials) {
+        try {
+            authService.getUserByEmail(credentials.email());
+            UserEntity user = authService.getUserEntityFuture().get(10, TimeUnit.SECONDS);
+            authService.resetUserEntityFuture();
+            System.out.println(user);
+            if (user == null) {
+                return new ResponseEntity<>(new AuthResponseDTO(null, "User not found"), HttpStatus.UNAUTHORIZED);
+            }
 
-        AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
-        Authentication authentication =
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                credentials.email(),
-                                credentials.password()));
+            AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
+            Authentication authentication =
+                    authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(
+                                    credentials.email(),
+                                    credentials.password()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtUtil.generateJwtToken(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = jwtUtil.generateJwtToken(authentication);
 
-
-        return new ResponseEntity<>(new AuthResponseDTO(token, "User login successfully"), HttpStatus.OK);
+            return new ResponseEntity<>(new AuthResponseDTO(token, "User login successfully"), HttpStatus.OK);
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            return new ResponseEntity<>(new AuthResponseDTO(null, "Login failed"), HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new AuthResponseDTO(null, "Login failed"), HttpStatus.UNAUTHORIZED);
+        }
     }
+
 
 
     @PostMapping("/register")
