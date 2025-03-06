@@ -19,39 +19,38 @@ const LoginForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
+       // setLoading(true);
         try {
+            console.log("hi fuck")
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 body: JSON.stringify(formData),
                 headers: {
                     'Content-Type': 'application/json',
                 },
-            });
+            })
 
-            const contentType = response.headers.get('content-type');
-            let data;
-            if (contentType && contentType.includes('application/json')) {
-                data = await response.json();
-            } else {
-                data = await response.text();
-                data = { message: data };
-            }
-
+console.log(response);
+            const data = await response.json();
             console.log(data);
             if (!response.ok) {
-                setError(data.message || 'Login failed');
+                setError(data.error.message || 'Login failed');
                 return;
             }
 
             saveToken(data.token);
-            navigate("/1");
+
+
+                navigate('/1');
 
         } catch (error) {
-            setError('Something went wrong. Please try again. ' + error.message);
-        } finally {
-            setLoading(false);
+            console.log(error);
+            setError('Something went wrong. Please try again.' + error);
         }
+
+        //finally {
+          //  setLoading(false);
+        //}
     };
 
 

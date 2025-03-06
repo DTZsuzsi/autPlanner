@@ -9,6 +9,7 @@ import com.codecool.server.repository.UserRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,11 +20,13 @@ public class UserService {
 private final UserRepository userRepository;
 private final UserMapper userMapper=UserMapper.INSTANCE;
 private final RabbitTemplate rabbitTemplate;
+private final PasswordEncoder passwordEncoder;
 
 @Autowired
-public UserService(UserRepository userRepository, RabbitTemplate rabbitTemplate) {
+public UserService(UserRepository userRepository, RabbitTemplate rabbitTemplate, PasswordEncoder passwordEncoder) {
     this.userRepository = userRepository;
     this.rabbitTemplate = rabbitTemplate;
+    this.passwordEncoder = passwordEncoder;
 
 }
 public List<UserDTO> getAllUsers() {
@@ -35,7 +38,10 @@ public UserDTO getUserById(long id) {
 }
 
 public long createUser(NewUserDTO newUserDTO) {
-    UserEntity userEntity = userMapper.newUserDTOToEntity(newUserDTO);
+    UserEntity userEntity = new UserEntity();
+    userEntity.setUsername(newUserDTO.email());
+    userEntity.setEmail(newUserDTO.email());
+    userEntity.setPassword(passwordEncoder.encode(newUserDTO.password()));
     return userRepository.save(userEntity).getId();
 }
 
