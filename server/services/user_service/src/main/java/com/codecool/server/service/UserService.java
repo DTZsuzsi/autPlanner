@@ -89,10 +89,7 @@ public boolean deleteUser(long id) {
         return userRepository.existsByEmail(email);
     }
 
-    @RabbitListener(queues = "userQueue")
-    public void receiveUserMessage(UserMessage userMessage) {
-        System.out.println("Received message in userQueue: " + userMessage);
-    }
+
 
 
 }

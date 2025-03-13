@@ -14,8 +14,10 @@ public class Child {
     private long id;
    private String firstName;
    private String lastName;
-   private String ParentEmail;
-   private LocalDate Birthday;
+   private String parentEmail;
+   private LocalDate birthday;
+   private String gender;
+   private int age;
 
 
     public Child() {
@@ -46,29 +48,43 @@ public class Child {
     }
 
     public String getParentEmail() {
-        return ParentEmail;
+        return parentEmail;
     }
 
     public void setParentEmail(String parentEmail) {
-        ParentEmail = parentEmail;
+        this.parentEmail = parentEmail;
     }
 
     public LocalDate getBirthday() {
-        return Birthday;
+        return birthday;
     }
 
     public void setBirthday(LocalDate birthday) {
-        Birthday = birthday;
+        this.birthday = birthday;
     }
 
     public Child(String firstName, String lastName, String parentEmail, LocalDate birthday) {
         this.firstName = firstName;
         this.lastName = lastName;
-        ParentEmail = parentEmail;
-        Birthday = birthday;
+        this.parentEmail = parentEmail;
+        this.birthday = birthday;
+        this.age = LocalDate.now().getYear()- this.birthday.getYear() ;
     }
 
-    public int getAge(){
-        return LocalDate.now().getYear() - Birthday.getYear();
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }
