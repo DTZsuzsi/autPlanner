@@ -19,7 +19,7 @@ const LoginForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-       // setLoading(true);
+       setLoading(true);
         try {
             console.log("hi fuck")
             const response = await fetch('/api/auth/login', {

@@ -10,6 +10,7 @@
 	<modules>
 		<module>services/auth_service</module>
 		<module>services/user_service</module>
+		<module>services/child_service</module>
 	</modules>
 
 	<parent>
