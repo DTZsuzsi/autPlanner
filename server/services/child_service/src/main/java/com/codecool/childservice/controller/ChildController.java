@@ -19,7 +19,7 @@ public class ChildController {
     }
 
 @GetMapping("/{id}")
-    public ChildDTO getChildById(@RequestParam("id") long id) {
+    public ChildDTO getChildById(@PathVariable("id") long id) {
     return childService.getChildById(id);
 }
 
@@ -34,7 +34,7 @@ public class ChildController {
 }
 
 @DeleteMapping("/{id}")
-    public boolean deleteChildById(@RequestParam("id") long id) {
+    public boolean deleteChildById(@PathVariable("id") long id) {
         return childService.deleteChildById(id);
 }
 

@@ -1,4 +1,6 @@
 package com.codecool.server.DTO.user;
 
-public record NewUserDTO(String firstName, String lastName, String email, String password) {
+import java.util.List;
+
+public record NewUserDTO(String firstName, String lastName, String email, String password, List<Long> childrenId) {
 }

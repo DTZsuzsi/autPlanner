@@ -77,7 +77,7 @@ public boolean deleteUser(long id) {
         System.out.println("Received user check request: " + userCheckRequest);
         boolean userExists = checkUserExists(userCheckRequest.getEmail());
         if (!userExists) {
-            NewUserDTO newUserDTO= new NewUserDTO(userCheckRequest.getFirstName(), userCheckRequest.getLastName(), userCheckRequest.getEmail(), userCheckRequest.getPassword());
+            NewUserDTO newUserDTO= new NewUserDTO(userCheckRequest.getFirstName(), userCheckRequest.getLastName(), userCheckRequest.getEmail(), userCheckRequest.getPassword(),userCheckRequest.getChildrenId());
 
             createUser(newUserDTO);
             String response = userExists ? "User exists" : "User created";
