@@ -1,12 +1,12 @@
+import UserProfile from "../components/user/UserProfile.jsx";
+import useAuthContext from "../hooks/useAuthContext.js";
+
 function MyAccount() {
+    const { currentUserId} = useAuthContext();
 
     return(
         <div>
-           <div className= "border-solid border-color-sky-500">
-               <p>
-               </p>
-
-           </div>
+           <UserProfile userId={currentUserId}/>
         </div>
     )
 }

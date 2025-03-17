@@ -17,7 +17,7 @@ useEffect(() => {
         setUser(userData);
     }
     fetchData();
-})
+}, [userId]);
 
     return (
         <div className="border-solid border-gray-200">
