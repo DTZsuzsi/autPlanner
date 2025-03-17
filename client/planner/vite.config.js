@@ -19,6 +19,11 @@ export default defineConfig({
         target: "http://localhost:8080",
         changeOrigin: true,
         secure: false,
+      },
+      "/api/child":{
+        target: "http://localhost:8082",
+        changeOrigin: true,
+        secure: false,
       }
     },
   },

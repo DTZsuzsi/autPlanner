@@ -1,7 +1,12 @@
 function MyAccount() {
+
     return(
         <div>
-            hello me
+           <div className= "border-solid border-color-sky-500">
+               <p>
+               </p>
+
+           </div>
         </div>
     )
 }
