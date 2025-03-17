@@ -1,4 +1,4 @@
-package model;
+package com.codecool.childservice.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Entity
 public class Child {
    @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
    private String firstName;
    private String lastName;

@@ -1,6 +1,6 @@
-package repository;
+package com.codecool.childservice.repository;
 
-import model.Child;
+import com.codecool.childservice.model.Child;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

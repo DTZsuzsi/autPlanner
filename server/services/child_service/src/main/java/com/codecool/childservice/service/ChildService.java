@@ -1,14 +1,13 @@
-package service;
+package com.codecool.childservice.service;
 
-import ChildDTO.ChildDTO;
-import mapper.ChildMapper;
-import model.Child;
+import com.codecool.childservice.ChildDTO.ChildDTO;
+import com.codecool.childservice.mapper.ChildMapper;
+import com.codecool.childservice.model.Child;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import repository.ChildRepository;
-import ChildDTO.NewChildDTO;
+import com.codecool.childservice.repository.ChildRepository;
+import com.codecool.childservice.ChildDTO.NewChildDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

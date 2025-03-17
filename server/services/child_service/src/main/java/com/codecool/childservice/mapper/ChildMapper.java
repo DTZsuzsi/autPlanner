@@ -1,8 +1,8 @@
-package mapper;
+package com.codecool.childservice.mapper;
 
-import ChildDTO.ChildDTO;
-import ChildDTO.NewChildDTO;
-import model.Child;
+import com.codecool.childservice.ChildDTO.ChildDTO;
+import com.codecool.childservice.ChildDTO.NewChildDTO;
+import com.codecool.childservice.model.Child;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

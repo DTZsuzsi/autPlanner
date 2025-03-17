@@ -1,4 +1,4 @@
-package ChildDTO;
+package com.codecool.childservice.ChildDTO;
 
 import java.time.LocalDate;
 
