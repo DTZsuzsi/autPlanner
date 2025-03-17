@@ -34,6 +34,11 @@ public UserDTO getUserById(long id) {
     return userRepository.findById(id).map(userMapper::userEntityToUserDTO).orElse(null);
 }
 
+public UserDTO getUserByEmail(String email) {
+    UserEntity userEntity = userRepository.findByEmail(email);
+    return userMapper.userEntityToUserDTO(userEntity);
+}
+
 public long createUser(NewUserDTO newUserDTO) {
     UserEntity userEntity = userMapper.newUserDTOToEntity(newUserDTO);
     return userRepository.save(userEntity).getId();
@@ -52,6 +57,8 @@ public long modifyUser(UserDTO userDTO) {
     }
     return 0;
 }
+
+
 
 public boolean deleteUser(long id) {
     UserEntity userEntity = userRepository.findById(id).orElse(null);

@@ -24,8 +24,13 @@ public class UserController{
     }
 
 @GetMapping("/{userId}")
-    public UserDTO getUserById(@RequestParam long userId) {
+    public UserDTO getUserById(@PathVariable long userId) {
         return userService.getUserById(userId);
+}
+
+@GetMapping("/email/{email}")
+public UserDTO getUserByEmail(@PathVariable String email) {
+        return userService.getUserByEmail(email);
 }
 @PostMapping
     public long addUser(@RequestBody NewUserDTO newUserDTO) {

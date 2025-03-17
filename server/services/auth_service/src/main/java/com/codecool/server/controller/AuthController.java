@@ -71,6 +71,10 @@ public class AuthController {
         authService.checkUser(userCheckRequest);
         return "User check request sent to user-service";
     }
+
+    @GetMapping("/my-username")
+    public String getMyUsername(@RequestBody String token) {
+return authService.getUserName(token);    }
 }
 
 //    @PostMapping("/sendMessage")
