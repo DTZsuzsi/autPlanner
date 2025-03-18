@@ -30,6 +30,7 @@ const { saveToken } = useAuthContext();
             });
 
             const data = await response.json();
+
             if (!response.ok) {
                 setError(data.error.message || 'Login failed');
                 return;
