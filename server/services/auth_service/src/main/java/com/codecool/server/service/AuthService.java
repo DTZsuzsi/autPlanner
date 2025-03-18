@@ -1,7 +1,11 @@
 package com.codecool.server.service;
 
 import com.codecool.server.model.UserCheckRequest;
+
 import com.codecool.server.model.UserEntity;
+
+import com.codecool.server.security.JWTUtil;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -20,6 +24,7 @@ public class AuthService {
     private CompletableFuture<String> userResponseFuture = new CompletableFuture<>();
     private CompletableFuture<UserEntity> userEntityFuture = new CompletableFuture<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final JWTUtil jwtUtil = new JWTUtil();
 
     @Autowired
     public AuthService(RabbitTemplate rabbitTemplate) {
@@ -60,6 +65,7 @@ public void sendStringMessage(String message) {
         rabbitTemplate.convertAndSend("authRequestQueue", userCheckRequest);
     }
 
+
     public void getUserByEmail(String email) {
         rabbitTemplate.convertAndSend("authUserQueue", email);
     }
@@ -67,6 +73,8 @@ public void sendStringMessage(String message) {
     @RabbitListener(queues = "userUserQueue")
     public void receiveUserResponse(UserEntity user) {
         userEntityFuture.complete(user);
+
+
     }
 
 }

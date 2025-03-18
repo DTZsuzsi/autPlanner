@@ -38,6 +38,7 @@ public class AuthController {
 this.authenticationConfiguration = authenticationConfiguration;    }
 
     @PostMapping("/login")
+
     public ResponseEntity<AuthResponseDTO> login(@RequestBody CredentialsDTO credentials) throws Exception {
 //        try {
             System.out.println(credentials.password());
@@ -66,6 +67,7 @@ this.authenticationConfiguration = authenticationConfiguration;    }
 //        } catch (Exception e) {
 //            return new ResponseEntity<>(new AuthResponseDTO(null, "Login failed"), HttpStatus.UNAUTHORIZED);
 //        }
+
     }
 
 
@@ -90,6 +92,7 @@ this.authenticationConfiguration = authenticationConfiguration;    }
         authService.checkUser(userCheckRequest);
         return "User check request sent to user-service";
     }
+
 }
 
 //    @PostMapping("/sendMessage")
