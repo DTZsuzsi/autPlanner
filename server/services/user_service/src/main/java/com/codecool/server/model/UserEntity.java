@@ -1,5 +1,6 @@
 package com.codecool.server.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ private String lastName;
 private String email;
 
 @ElementCollection
+@JsonIgnore
 private List<Long> childrenId;
 
     public UserEntity(long id, String username, String password, String firstName, String lastName, String email, List<Long> childrenId) {

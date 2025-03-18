@@ -1,89 +1,61 @@
-import { createContext, useState, useEffect } from 'react';
-import useAuthRequest from '../hooks/useAuthRequest';
+import React, { createContext, useState, useEffect } from "react";
 
 export const AuthContext = createContext({
-    token: null,
-    currentUserId: null,
-    isAuthenticated: false,
-    saveToken: () => {},
-    deleteToken: () => {},
-    loading: true,
+    user: null,
+    saveUser: () => {},
+    logout: () => {},
+    isLoggedIn: () => false,
+    getUser: () => {},
 });
 
 // eslint-disable-next-line react/prop-types
-export const AuthProvider = ({children}) => {
-    const [token, setToken] = useState(null);
-    const [currentUserId, setCurrentUserId] = useState(null);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [loading, setLoading] = useState(true);
-
-    const { sendRequest } = useAuthRequest();
-
-    const saveToken = (token, expiryTime) => {
-        const expiryTimestamp = expiryTime
-            ? Date.now() + expiryTime * 1000
-            : null;
-        localStorage.setItem('token', token);
-        expiryTimestamp &&
-        localStorage.setItem('token_expiry', expiryTimestamp);
-
-        setToken(token);
-        setIsAuthenticated(true);
-    };
-
-    const deleteToken = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('token_expiry');
-        setToken(null);
-        setIsAuthenticated(false);
-        setCurrentUserId(null);
-    };
-
-    const getUserId = async () => {
-        try {
-            const data = await sendRequest('/api/user/my-id', 'GET');
-            if (data.userId) {
-                setCurrentUserId(data.userId);
-                setIsAuthenticated(true);
-            }
-        } catch (error) {
-            console.error('Failed to fetch user ID:', error);
-            deleteToken();
-        } finally {
-            setLoading(false);
-        }
-    };
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
-        const storedToken = localStorage.getItem('token');
-        const expiryTimestamp = localStorage.getItem('token_expiry');
-        const isExpired = expiryTimestamp && Date.now() > expiryTimestamp;
-
-        if (storedToken && !isExpired) {
-            setToken(storedToken);
-        } else if (isExpired) {
-            deleteToken();
-        }
+        getUser();
     }, []);
 
-    useEffect(() => {
-        if (token && !currentUserId) {
-            getUserId();
+    async function getUser() {
+        const storedUsername = localStorage.getItem("username");
+        if (!storedUsername) {
+            return;
         }
-    }, [token, currentUserId]);
+
+        try {
+            const username = JSON.parse(storedUsername);
+            const response = await fetch(`/api/user/api/users/email/${username}`);
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch user data");
+            }
+
+            const json = await response.json();
+            setUser(json);
+        } catch (error) {
+            console.error("Error fetching user:", error);
+            setUser(null);
+        }
+    }
+
+    const saveUser = (userData) => {
+        setUser(userData);
+        localStorage.setItem("username", JSON.stringify(userData.username));
+        localStorage.setItem("jwtToken", JSON.stringify(userData.jwtToken));
+    };
+
+    const isLoggedIn = () => {
+        return !!localStorage.getItem("username");
+    };
+
+    const logout = () => {
+        setUser(null);
+        localStorage.removeItem("username");
+        localStorage.removeItem("jwtToken");
+    };
 
     return (
-        <AuthContext.Provider
-            value={{
-                token,
-                currentUserId,
-                isAuthenticated,
-                saveToken,
-                deleteToken,
-                loading,
-            }}
-        >
+        <AuthContext.Provider value={{ user, saveUser, logout, isLoggedIn, getUser }}>
             {children}
         </AuthContext.Provider>
     );

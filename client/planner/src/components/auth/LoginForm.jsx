@@ -1,9 +1,8 @@
 import { useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
 import UniversalForm from '../common/UniversalForm.jsx';
-import useAuthContext from "../hooks/useAuthContext.jsx";
-
+import {useNavigate} from "react-router-dom";
+import useAuthContext from "../../hooks/useAuthContext.js";
 
 const LoginForm = () => {
     const [error, setError] = useState(null);
@@ -11,20 +10,21 @@ const LoginForm = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
+
     });
     const navigate = useNavigate();
 const { saveToken } = useAuthContext();
 
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData({ ...formData, [e.target.name]: e.target.value, username: formData.email });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
        setLoading(true);
+       console.log("hi")
         try {
-            console.log("hi fuck")
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 body: JSON.stringify(formData),
@@ -45,15 +45,13 @@ console.log(response);
 
 
           navigate(`/${data.user.id}`);
-            }
+
         } catch (error) {
             console.log(error);
             setError('Something went wrong. Please try again.' + error);
         }
 
-        //finally {
-          //  setLoading(false);
-        //}
+
     };
 
 

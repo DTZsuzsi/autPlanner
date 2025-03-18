@@ -30,6 +30,7 @@ public class UserController{
 
 @GetMapping("/email/{email}")
 public UserDTO getUserByEmail(@PathVariable String email) {
+    System.out.println("hello user"+email);
         return userService.getUserByEmail(email);
 }
 @PostMapping
