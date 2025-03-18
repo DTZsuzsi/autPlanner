@@ -1,13 +1,11 @@
-
 import React, { createContext, useState, useEffect } from "react";
 
 export const AuthContext = createContext({
-user:null,
-    saveUser:()=>{},
-    logout:()=>{},
-    isLoggedIn:false,
-    getUser:()=>{},
-
+    user: null,
+    saveUser: () => {},
+    logout: () => {},
+    isLoggedIn: () => false,
+    getUser: () => {},
 });
 
 // eslint-disable-next-line react/prop-types
@@ -18,46 +16,46 @@ export const AuthProvider = ({ children }) => {
         getUser();
     }, []);
 
-    const getUser = () => {
-        if (user) {
-            return user;
+    async function getUser() {
+        const storedUsername = localStorage.getItem("username");
+        if (!storedUsername) {
+            return;
         }
 
-        const username = JSON.parse(localStorage.getItem("username"));
-        const jwtToken = JSON.parse(localStorage.getItem("jwtToken"));
+        try {
+            const username = JSON.parse(storedUsername);
+            const response = await fetch(`/api/user/api/users/email/${username}`);
 
-        const storageUser = { username, jwtToken };
-        if (storageUser) {
-            setUser(storageUser);
+            if (!response.ok) {
+                throw new Error("Failed to fetch user data");
+            }
+
+            const json = await response.json();
+            setUser(json);
+        } catch (error) {
+            console.error("Error fetching user:", error);
+            setUser(null);
         }
-
-        return storageUser;
-    };
+    }
 
     const saveUser = (userData) => {
         setUser(userData);
-        localStorage.setItem("username", JSON.stringify(userData.userName));
+        localStorage.setItem("username", JSON.stringify(userData.username));
         localStorage.setItem("jwtToken", JSON.stringify(userData.jwtToken));
     };
 
     const isLoggedIn = () => {
-        const user = localStorage.getItem("username");
-        return !!user;
+        return !!localStorage.getItem("username");
     };
 
     const logout = () => {
         setUser(null);
         localStorage.removeItem("username");
         localStorage.removeItem("jwtToken");
-        localStorage.removeItem("roles");
     };
 
     return (
-        <AuthContext.Provider
-            value={{
-               user, saveUser, logout,isLoggedIn,getUser
-            }}
-        >
+        <AuthContext.Provider value={{ user, saveUser, logout, isLoggedIn, getUser }}>
             {children}
         </AuthContext.Provider>
     );

@@ -2,7 +2,6 @@
 
 // eslint-disable-next-line react/prop-types
 function UserProfile({user}){
-
     return (
         <div className="border-solid border-gray-200">
             <p>
@@ -10,6 +9,9 @@ function UserProfile({user}){
             </p>
             <p>
                 Last name: {user?.lastName}
+            </p>
+            <p>
+                email: {user?.email}
             </p>
 </div>
     )

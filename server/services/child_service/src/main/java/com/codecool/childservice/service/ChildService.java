@@ -29,6 +29,7 @@ private final ChildMapper childMapper=ChildMapper.INSTANCE;
 
     public ChildDTO getChildById(long id) {
     Child child = childRepository.findById(id).orElse(null);
+        System.out.println(child);
     return childMapper.childToChildDTO(child);
     }
 

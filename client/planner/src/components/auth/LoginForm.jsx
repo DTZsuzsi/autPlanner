@@ -10,18 +10,20 @@ const LoginForm = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
+
     });
     const navigate = useNavigate();
 const { saveToken } = useAuthContext();
 
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData({ ...formData, [e.target.name]: e.target.value, username: formData.email });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
        setLoading(true);
+       console.log("hi")
         try {
             const response = await fetch('/api/auth/login', {
                 method: 'POST',

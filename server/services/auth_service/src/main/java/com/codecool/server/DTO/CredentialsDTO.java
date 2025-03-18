@@ -1,4 +1,4 @@
 package com.codecool.server.DTO;
 
-public record CredentialsDTO(String email, String password) {
+public record CredentialsDTO(String email, String password, String username) {
 }
