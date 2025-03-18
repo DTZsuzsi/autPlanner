@@ -37,6 +37,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody CredentialsDTO credentials) {
+        System.out.println("hello Zsuzsi");
         Authentication authentication =
                 authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
@@ -45,6 +46,7 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtUtil.generateJwtToken(authentication);
+        System.out.println("hello Zsuzsi2");
 
 
         return new ResponseEntity<>(new AuthResponseDTO(token, "User login successfully"), HttpStatus.OK);
@@ -72,9 +74,6 @@ public class AuthController {
         return "User check request sent to user-service";
     }
 
-    @GetMapping("/my-username")
-    public String getMyUsername(@RequestBody String token) {
-return authService.getUserName(token);    }
 }
 
 //    @PostMapping("/sendMessage")
