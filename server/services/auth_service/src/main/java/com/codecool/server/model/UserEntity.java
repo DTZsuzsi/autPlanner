@@ -1,35 +1,29 @@
 package com.codecool.server.model;
 
-import jakarta.persistence.*;
 
-import java.util.List;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class UserEntity {
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private String username;
+    private String password;
+    private String firstName;
+    private String lastName;
+    private String email;
 
-@Column(nullable = false, unique = true)
-private String username;
-private String password;
-private String firstName;
-private String lastName;
-@Column(nullable = false, unique = true)
-private String email;
-
-@ElementCollection
-private List<Long> childrenId;
-
-    public UserEntity(long id, String username, String password, String firstName, String lastName, String email, List<Long> childrenId) {
+    public UserEntity(long id, String username, String password, String firstName, String lastName, String email) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.childrenId = childrenId;
     }
     public UserEntity() {}
 
@@ -80,12 +74,5 @@ private List<Long> childrenId;
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public List<Long> getChildrenId() {
-        return childrenId;
-    }
-
-    public void setChildrenId(List<Long> childrenId) {
-        this.childrenId = childrenId;
-    }
 }
+

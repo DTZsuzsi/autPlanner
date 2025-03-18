@@ -1,3 +1,4 @@
+
 INSERT INTO user_entity (id, username, password, first_name, last_name, email) VALUES
                                                                                    (1, 'user1', 'password1', 'John', 'Doe', 'john.doe@example.com'),
                                                                                    (2, 'user2', 'password2', 'Jane', 'Doe', 'jane.doe@example.com'),
@@ -23,3 +24,4 @@ INSERT INTO user_entity_children_id (user_entity_id, children_id) VALUES
                                                                       (8, 8),          -- user8 has child 8
                                                                       (9, 9),          -- user9 has child 9
                                                                       (10, 10);        -- user10 has child 10
+

@@ -9,6 +9,7 @@ import com.codecool.server.repository.UserRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,11 +20,13 @@ public class UserService {
 private final UserRepository userRepository;
 private final UserMapper userMapper=UserMapper.INSTANCE;
 private final RabbitTemplate rabbitTemplate;
+private final PasswordEncoder passwordEncoder;
 
 @Autowired
-public UserService(UserRepository userRepository, RabbitTemplate rabbitTemplate) {
+public UserService(UserRepository userRepository, RabbitTemplate rabbitTemplate, PasswordEncoder passwordEncoder) {
     this.userRepository = userRepository;
     this.rabbitTemplate = rabbitTemplate;
+    this.passwordEncoder = passwordEncoder;
 
 }
 public List<UserDTO> getAllUsers() {
@@ -40,7 +43,10 @@ public UserDTO getUserByEmail(String email) {
 }
 
 public long createUser(NewUserDTO newUserDTO) {
-    UserEntity userEntity = userMapper.newUserDTOToEntity(newUserDTO);
+    UserEntity userEntity = new UserEntity();
+    userEntity.setUsername(newUserDTO.email());
+    userEntity.setEmail(newUserDTO.email());
+    userEntity.setPassword(passwordEncoder.encode(newUserDTO.password()));
     return userRepository.save(userEntity).getId();
 }
 
@@ -92,11 +98,23 @@ public boolean deleteUser(long id) {
 
     }
 
-    private boolean checkUserExists(String email) {
-        return userRepository.existsByEmail(email);
+    @RabbitListener(queues = "authUserQueue")
+    public void receiveUserRequest(String email) {
+    System.out.println("Received user request: " + email);
+    boolean userExists = checkUserExists(email);
+        System.out.println(userExists);
+    if (userExists) {
+        UserEntity user=userRepository.findByEmail(email);
+        System.out.println(user.getEmail());
+        rabbitTemplate.convertAndSend("userUserQueue", user);
+        System.out.println("Ive sent the user: " + user.getEmail());
+    }
     }
 
 
+    private boolean checkUserExists(String email) {
+        return userRepository.findByEmail(email)!=null;
+    }
 
 
 }

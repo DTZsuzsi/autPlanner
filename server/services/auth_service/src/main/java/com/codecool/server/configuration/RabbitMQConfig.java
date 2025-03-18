@@ -31,9 +31,16 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue authUserQueue(){return new Queue("authUserQueue", true);}
+
+    @Bean
+    public Queue userUserQueue(){return new Queue("userUserQueue", true);}
+
+    @Bean
     public Jackson2JsonMessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
     }
+
 
 
 
