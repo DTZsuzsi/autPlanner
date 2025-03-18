@@ -1,16 +1,20 @@
 package com.codecool.server.model;
 
+import java.util.List;
+
 public class UserCheckRequest {
 private String firstName;
 private String lastName;
 private String email;
 private String password;
+private List<Long> childrenId;
 
-    public UserCheckRequest(String firstName, String lastName, String email, String password) {
+    public UserCheckRequest(String firstName, String lastName, String email, String password, List<Long> childrenId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.childrenId = childrenId;
     }
 
     public String getPassword() {
@@ -43,5 +47,13 @@ private String password;
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Long> getChildrenId() {
+        return childrenId;
+    }
+
+    public void setChildrenId(List<Long> childrenId) {
+        this.childrenId = childrenId;
     }
 }

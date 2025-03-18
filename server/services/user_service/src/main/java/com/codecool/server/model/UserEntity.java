@@ -1,9 +1,8 @@
 package com.codecool.server.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class UserEntity {
@@ -16,13 +15,17 @@ private String firstName;
 private String lastName;
 private String email;
 
-    public UserEntity(long id, String username, String password, String firstName, String lastName, String email) {
+@ElementCollection
+private List<Long> childrenId;
+
+    public UserEntity(long id, String username, String password, String firstName, String lastName, String email, List<Long> childrenId) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.childrenId = childrenId;
     }
     public UserEntity() {}
 
@@ -72,5 +75,13 @@ private String email;
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Long> getChildrenId() {
+        return childrenId;
+    }
+
+    public void setChildrenId(List<Long> childrenId) {
+        this.childrenId = childrenId;
     }
 }

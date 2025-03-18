@@ -34,6 +34,11 @@ public UserDTO getUserById(long id) {
     return userRepository.findById(id).map(userMapper::userEntityToUserDTO).orElse(null);
 }
 
+public UserDTO getUserByEmail(String email) {
+    UserEntity userEntity = userRepository.findByEmail(email);
+    return userMapper.userEntityToUserDTO(userEntity);
+}
+
 public long createUser(NewUserDTO newUserDTO) {
     UserEntity userEntity = userMapper.newUserDTOToEntity(newUserDTO);
     return userRepository.save(userEntity).getId();
@@ -52,6 +57,8 @@ public long modifyUser(UserDTO userDTO) {
     }
     return 0;
 }
+
+
 
 public boolean deleteUser(long id) {
     UserEntity userEntity = userRepository.findById(id).orElse(null);
@@ -77,7 +84,7 @@ public boolean deleteUser(long id) {
         System.out.println("Received user check request: " + userCheckRequest);
         boolean userExists = checkUserExists(userCheckRequest.getEmail());
         if (!userExists) {
-            NewUserDTO newUserDTO= new NewUserDTO(userCheckRequest.getFirstName(), userCheckRequest.getLastName(), userCheckRequest.getEmail(), userCheckRequest.getPassword());
+            NewUserDTO newUserDTO= new NewUserDTO(userCheckRequest.getFirstName(), userCheckRequest.getLastName(), userCheckRequest.getEmail(), userCheckRequest.getPassword(),userCheckRequest.getChildrenId());
 
             createUser(newUserDTO);
             String response = userExists ? "User exists" : "User created";
@@ -89,10 +96,7 @@ public boolean deleteUser(long id) {
         return userRepository.existsByEmail(email);
     }
 
-    @RabbitListener(queues = "userQueue")
-    public void receiveUserMessage(UserMessage userMessage) {
-        System.out.println("Received message in userQueue: " + userMessage);
-    }
+
 
 
 }

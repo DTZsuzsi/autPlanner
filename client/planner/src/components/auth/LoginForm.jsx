@@ -1,6 +1,7 @@
 import { useState } from 'react';
-//import { useNavigate } from 'react-router-dom';
 import UniversalForm from '../common/UniversalForm.jsx';
+import {useNavigate} from "react-router-dom";
+import useAuthContext from "../../hooks/useAuthContext.js";
 
 const LoginForm = () => {
     const [error, setError] = useState(null);
@@ -9,8 +10,8 @@ const LoginForm = () => {
         email: '',
         password: '',
     });
-   // const navigate = useNavigate();
-//    const { saveToken } = useAuthContext();
+    const navigate = useNavigate();
+const { saveToken } = useAuthContext();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,12 +35,9 @@ const LoginForm = () => {
                 return;
             }
 
-          //  saveToken(data.token, data.refresh_token);
+            saveToken(data.token);
 
-          //  if (!data.hasUserDetails) {
-            //    navigate('/userdetails');
-            //} else {
-              //  navigate('/feed');
+          navigate(`/${data.user.id}`);
             //}
         } catch (error) {
             setError('Something went wrong. Please try again.' + error);
