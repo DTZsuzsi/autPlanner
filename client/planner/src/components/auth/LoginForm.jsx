@@ -1,9 +1,8 @@
 import { useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
 import UniversalForm from '../common/UniversalForm.jsx';
-import useAuthContext from "../hooks/useAuthContext.jsx";
-
+import {useNavigate} from "react-router-dom";
+import useAuthContext from "../../hooks/useAuthContext.js";
 
 const LoginForm = () => {
     const [error, setError] = useState(null);
@@ -24,7 +23,6 @@ const { saveToken } = useAuthContext();
         e.preventDefault();
        setLoading(true);
         try {
-            console.log("hi fuck")
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 body: JSON.stringify(formData),

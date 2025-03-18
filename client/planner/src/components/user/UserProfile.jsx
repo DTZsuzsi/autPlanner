@@ -1,23 +1,7 @@
-import {useEffect, useState} from "react";
-import useAuthRequest from "../../hooks/useAuthRequest.js";
 
 
 // eslint-disable-next-line react/prop-types
-function UserProfile({userId}){
-const [user, setUser] = useState(null);
-    const { sendRequest } = useAuthRequest();
-
-
-useEffect(() => {
-    async function fetchData(){
-        const { userData } = await sendRequest(
-            `/api/user/${userId}`,
-            'GET',
-        );
-        setUser(userData);
-    }
-    fetchData();
-}, [userId]);
+function UserProfile({user}){
 
     return (
         <div className="border-solid border-gray-200">
