@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./scenes/HomePage.jsx";
 import RegistrationPage from "./scenes/RegistrationPage.jsx";
 import MyAccount from "./scenes/MyAccount.jsx";
+import NewChildForm from "./components/children/NewChildForm.jsx";
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
                     <Route path="/login" element={<HomePage />} />
                     <Route path="/register" element={<RegistrationPage />} />
                     <Route path="/:id" element={<MyAccount />} />
+                    <Route path="/newChild" element={<NewChildForm />} />
                 </Routes>
             </BrowserRouter>
         </div>
