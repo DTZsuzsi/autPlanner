@@ -38,7 +38,7 @@ public class AuthController {
 this.authenticationConfiguration = authenticationConfiguration;    }
 
     @PostMapping("/login")
-    public String login(@RequestBody CredentialsDTO credentials) throws Exception {
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody CredentialsDTO credentials) throws Exception {
 //       try {
             System.out.println(credentials.password());
             authService.getUserByEmail(credentials.email());
@@ -48,9 +48,9 @@ this.authenticationConfiguration = authenticationConfiguration;    }
             System.out.println(user.getEmail());
             System.out.println(user.getPassword());
             if (user == null) {
-               // return new ResponseEntity<>(new AuthResponseDTO(null, "User not found"), HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(new AuthResponseDTO(null, "User not found"), HttpStatus.UNAUTHORIZED);
 
-            return "Invalid username or password";
+
             }
 
 //            AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
@@ -63,8 +63,7 @@ this.authenticationConfiguration = authenticationConfiguration;    }
 //            SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = jwtUtil.generateJwtToken(credentials.username());
             System.out.println("token is "+token);
-            return token;
-//            return new ResponseEntity<>(new AuthResponseDTO(token, "User login successfully"), HttpStatus.OK);
+        return new ResponseEntity<>(new AuthResponseDTO(token, "User login successfully"), HttpStatus.OK);
 //        } catch (ExecutionException | InterruptedException | TimeoutException e) {
 //            return new ResponseEntity<>(new AuthResponseDTO(null, "Login failed"), HttpStatus.UNAUTHORIZED);
 //        } catch (Exception e) {

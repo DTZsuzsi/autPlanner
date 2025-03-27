@@ -13,7 +13,7 @@ const LoginForm = () => {
 
     });
     const navigate = useNavigate();
-const { saveToken } = useAuthContext();
+const {saveUser} = useAuthContext();
 
 
     const handleChange = (e) => {
@@ -41,10 +41,10 @@ console.log(response);
                 return;
             }
 
-            saveToken(data.token);
+            saveUser(data);
 
 
-          navigate(`/${data.user.id}`);
+          navigate(`/1`);
 
         } catch (error) {
             console.log(error);
