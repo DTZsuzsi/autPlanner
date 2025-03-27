@@ -38,7 +38,6 @@ public class AuthController {
 this.authenticationConfiguration = authenticationConfiguration;    }
 
     @PostMapping("/login")
-
     public String login(@RequestBody CredentialsDTO credentials) throws Exception {
 //       try {
             System.out.println(credentials.password());
@@ -54,16 +53,16 @@ this.authenticationConfiguration = authenticationConfiguration;    }
             return "Invalid username or password";
             }
 
-            AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
-            Authentication authentication =
-                    authenticationManager.authenticate(
-                            new UsernamePasswordAuthenticationToken(
-                                    credentials.email(),
-                                    credentials.password()));
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String token = jwtUtil.generateJwtToken(authentication);
-            System.out.println("token is"+token);
+//            AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
+//            Authentication authentication =
+//                    authenticationManager.authenticate(
+//                            new UsernamePasswordAuthenticationToken(
+//                                    credentials.email(),
+//                                    credentials.password()));
+//
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = jwtUtil.generateJwtToken(credentials.username());
+            System.out.println("token is "+token);
             return token;
 //            return new ResponseEntity<>(new AuthResponseDTO(token, "User login successfully"), HttpStatus.OK);
 //        } catch (ExecutionException | InterruptedException | TimeoutException e) {

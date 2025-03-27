@@ -24,12 +24,12 @@ public class JWTUtil {
     @Value("${codecool.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    public String generateJwtToken(Authentication authentication) {
+    public String generateJwtToken(String userName) {
 
-        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+       // UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
 
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
+                .setSubject(userName)
                 .setIssuedAt(Date.from(Instant.now()))
                 .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationMs)))
                 .signWith(key(), SignatureAlgorithm.HS256)
