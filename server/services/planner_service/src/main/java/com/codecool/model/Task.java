@@ -18,6 +18,7 @@ public class Task {
 
     public Task() {
     }
+
     public Task(String name, String description, String imageUrl) {
         this.name = name;
         this.description = description;

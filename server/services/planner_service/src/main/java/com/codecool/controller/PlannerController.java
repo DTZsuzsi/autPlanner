@@ -1,4 +1,7 @@
 package com.codecool.controller;
 
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController("/api/planner")
 public class PlannerController {
 }
