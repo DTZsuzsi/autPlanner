@@ -1,6 +1,7 @@
 package com.codecool.service;
 
-import NewTaskDTO;
+
+import com.codecool.DTO.TaskDTO.NewTaskDTO;
 import com.codecool.DTO.TaskDTO.TaskDTO;
 import com.codecool.model.Task;
 import com.codecool.repository.TaskRepository;
