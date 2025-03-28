@@ -14,6 +14,7 @@ const LoginForm = () => {
     });
     const navigate = useNavigate();
 const {saveUser} = useAuthContext();
+    console.log("saveUser function:", saveUser);
 
 
     const handleChange = (e) => {
@@ -22,8 +23,11 @@ const {saveUser} = useAuthContext();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-       setLoading(true);
-       console.log("hi")
+        setLoading(true);
+        console.log("hi");
+        console.log("saveUser function:", saveUser);
+
+
         try {
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
@@ -31,31 +35,42 @@ const {saveUser} = useAuthContext();
                 headers: {
                     'Content-Type': 'application/json',
                 },
-            })
+            });
 
-console.log(response);
-            const data = await response.json();
-            console.log(data);
+            console.log("Raw response:", response);
+
             if (!response.ok) {
-                setError(data.error.message || 'Login failed');
+                // Try to extract error message if possible
+                let errorMessage = "Login failed";
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.error?.message || errorMessage;
+                } catch (jsonError) {
+                    console.error("Error parsing error response:", jsonError);
+                }
+                setError(errorMessage);
+                return;
+            }
+
+            const data = await response.json();
+            console.log("Parsed response:", data);
+
+            if (!data.jwtToken) {
+                setError("Login failed: No token received");
                 return;
             }
 
             saveUser(data);
 
-
-          navigate(`/1`);
-
+            console.log("Good job! Redirecting...");
+            navigate(`/1`);
         } catch (error) {
-            console.log(error);
-            setError('Something went wrong. Please try again.' + error);
-        }
+            console.error("Request failed:", error);
+            setError('Something went wrong. Please try again.');
+        }}
 
 
-    };
-
-
-    return (
+            return (
         <UniversalForm
             onSubmit={handleSubmit}
             formData={formData}

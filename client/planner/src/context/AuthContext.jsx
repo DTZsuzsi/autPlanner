@@ -8,27 +8,24 @@ export const AuthContext = createContext({
     getUser: () => {},
 });
 
-// eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    console.log("AuthProvider is rendering");  // Add this to see if it's rendering
 
     useEffect(() => {
-        getUser();
+        const fetchUser = async () => {
+            await getUser();
+        };
+        fetchUser();
     }, []);
 
     async function getUser() {
         const storedUsername = localStorage.getItem("username");
-        if (!storedUsername) {
-            return;
-        }
+        if (!storedUsername) return;
 
         try {
-            const username = JSON.parse(storedUsername);
-            const response = await fetch(`/api/user/api/users/email/${username}`);
-
-            if (!response.ok) {
-                throw new Error("Failed to fetch user data");
-            }
+            const response = await fetch(`/api/user/api/users/email/${storedUsername}`);
+            if (!response.ok) throw new Error("Failed to fetch user data");
 
             const json = await response.json();
             setUser(json);
@@ -38,21 +35,47 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const saveUser = (userData) => {
-        setUser(userData);
-        localStorage.setItem("username", JSON.stringify(userData.username));
-        localStorage.setItem("jwtToken", JSON.stringify(userData.jwtToken));
+    const getUsernameFromToken = (token) => {
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.sub;
+        } catch (e) {
+            console.error("Invalid token", e);
+            return null;
+        }
     };
 
-    const isLoggedIn = () => {
-        return !!localStorage.getItem("username");
+    const saveUser = (response) => {
+        console.log("hello", response);
+        if (!response || !response.jwtToken) {
+            console.error("Invalid response format:", response);
+            return;
+        }
+
+        try {
+            localStorage.setItem('jwtToken', response.jwtToken);
+            console.log("Token saved");
+
+            const username = getUsernameFromToken(response.jwtToken);
+            if (username) {
+                localStorage.setItem('username', username);
+                console.log("Username saved");
+                setUser({ username });
+            }
+        } catch (error) {
+            console.error("Failed to store in localStorage:", error);
+        }
     };
+
+    const isLoggedIn = () => !!localStorage.getItem("username");
 
     const logout = () => {
         setUser(null);
         localStorage.removeItem("username");
         localStorage.removeItem("jwtToken");
     };
+
+    console.log("✅ AuthProvider is rendering with user:", user);
 
     return (
         <AuthContext.Provider value={{ user, saveUser, logout, isLoggedIn, getUser }}>
