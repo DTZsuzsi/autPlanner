@@ -1,7 +1,7 @@
 package com.codecool.controller;
 
-import com.codecool.DTO.NewTaskDTO;
-import com.codecool.DTO.TaskDTO;
+import NewTaskDTO;
+import com.codecool.DTO.TaskDTO.TaskDTO;
 import com.codecool.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

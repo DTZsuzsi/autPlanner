@@ -1,13 +1,12 @@
 package com.codecool.service;
 
-import com.codecool.DTO.NewTaskDTO;
-import com.codecool.DTO.TaskDTO;
+import NewTaskDTO;
+import com.codecool.DTO.TaskDTO.TaskDTO;
 import com.codecool.model.Task;
 import com.codecool.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
