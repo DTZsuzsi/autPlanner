@@ -14,7 +14,6 @@ const LoginForm = () => {
     });
     const navigate = useNavigate();
 const {saveUser} = useAuthContext();
-    console.log("saveUser function:", saveUser);
 
 
     const handleChange = (e) => {
@@ -24,8 +23,7 @@ const {saveUser} = useAuthContext();
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        console.log("hi");
-        console.log("saveUser function:", saveUser);
+
 
 
         try {
@@ -37,7 +35,6 @@ const {saveUser} = useAuthContext();
                 },
             });
 
-            console.log("Raw response:", response);
 
             if (!response.ok) {
                 // Try to extract error message if possible
@@ -62,7 +59,6 @@ const {saveUser} = useAuthContext();
 
             saveUser(data);
 
-            console.log("Good job! Redirecting...");
             navigate(`/1`);
         } catch (error) {
             console.error("Request failed:", error);

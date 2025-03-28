@@ -10,7 +10,6 @@ export const AuthContext = createContext({
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    console.log("AuthProvider is rendering");  // Add this to see if it's rendering
 
     useEffect(() => {
         const fetchUser = async () => {
