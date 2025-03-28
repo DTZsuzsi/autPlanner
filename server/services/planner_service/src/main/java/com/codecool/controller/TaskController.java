@@ -34,8 +34,8 @@ private final TaskService taskService;
     return taskService.getTaskByName(name);
     }
 
-    @DeleteMapping("/")
-    public boolean deleteTask(@RequestBody long id) {
+    @DeleteMapping("/{id}")
+    public boolean deleteTask(@PathVariable long id) {
    return taskService.deleteTaskById(id);
     }
 
