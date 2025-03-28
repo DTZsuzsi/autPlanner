@@ -20,6 +20,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/tasks/**").permitAll()
+                        .requestMatchers("/api/planner/**").permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();

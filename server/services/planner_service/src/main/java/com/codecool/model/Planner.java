@@ -10,17 +10,16 @@ public class Planner {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-    @OneToOne
-    private Child child;
+    private String childName;
     @OneToMany
     private List<Task> tasks;
 
     public Planner() {
     }
 
-    public Planner(String name, Child child) {
+    public Planner(String name, String childName) {
         this.name = name;
-        this.child = child;
+        this.childName = childName;
     }
 
     public long getId() {
@@ -39,12 +38,12 @@ public class Planner {
         this.name = name;
     }
 
-    public Child getChild() {
-        return child;
+    public String getChildName() {
+        return childName;
     }
 
-    public void setChild(Child child) {
-        this.child = child;
+    public void setChildName(String childName) {
+        this.childName = childName;
     }
 
     public List<Task> getTasks() {
