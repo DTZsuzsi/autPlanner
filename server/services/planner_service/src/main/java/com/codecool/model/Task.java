@@ -18,10 +18,19 @@ public class Task {
 
     public Task() {
     }
+
+    public Task(String name, String description, String imageUrl,long id) {
+        this.name = name;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.id = id;
+    }
+
     public Task(String name, String description, String imageUrl) {
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
+
     }
 
     public long getId() {
