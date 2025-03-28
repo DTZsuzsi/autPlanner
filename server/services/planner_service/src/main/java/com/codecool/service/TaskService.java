@@ -1,5 +1,6 @@
 package com.codecool.service;
 
+import com.codecool.DTO.NewTaskDTO;
 import com.codecool.DTO.TaskDTO;
 import com.codecool.model.Task;
 import com.codecool.repository.TaskRepository;
@@ -33,7 +34,7 @@ public TaskService(TaskRepository repository) {
    return tasks.stream().map(task -> new TaskDTO(task.getName(), task.getDescription(), task.getImageUrl(), task.getId())).collect(Collectors.toList());
     }
 
-    public long createTask(TaskDTO taskDTO) {
+    public long createTask(NewTaskDTO taskDTO) {
     Task task = new Task(taskDTO.name(), taskDTO.description(), taskDTO.imageUrl());
     return repository.save(task).getId();
     }
